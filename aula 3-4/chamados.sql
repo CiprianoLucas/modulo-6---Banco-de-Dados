@@ -1,3 +1,13 @@
+-- DROP TABLE public.chamados_agencias_terceiros;
+-- DROP TABLE public.chamados_agencias;
+-- DROP TABLE public.chamados;
+-- DROP TABLE public.agencias;
+-- DROP TABLE public.colaboradores;
+-- DROP TABLE public.terceiros;
+-- DROP TYPE status_chamado;
+
+-- Aula 3
+
 CREATE TABLE IF NOT EXISTS public.colaboradores (
 	id SERIAL PRIMARY KEY,
 	nome VARCHAR(256) NOT NULL,
@@ -54,36 +64,33 @@ CREATE TABLE IF NOT EXISTS public.chamados_agencias_terceiros(
 ALTER TABLE IF EXISTS public.chamados
 ADD FOREIGN KEY (id_colaborador)
 REFERENCES public.colaboradores(id)
-ON UPDATE CASCADE;
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE IF EXISTS public.chamados_agencias
 ADD FOREIGN KEY (id_chamado)
 REFERENCES public.chamados(id)
-ON UPDATE CASCADE;
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE IF EXISTS public.chamados_agencias
 ADD FOREIGN KEY (id_agencia)
 REFERENCES public.agencias(id)
 ON UPDATE CASCADE
-ON DELETE NO ACTION;
+ON DELETE CASCADE;
 
 ALTER TABLE IF EXISTS public.chamados_agencias_terceiros
 ADD FOREIGN KEY (id_chamado_agencia)
 REFERENCES public.chamados_agencias(id)
-ON UPDATE CASCADE;
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE IF EXISTS public.chamados_agencias_terceiros
 ADD FOREIGN KEY (id_terceiro)
 REFERENCES public.terceiros(id)
-ON UPDATE CASCADE;
-
--- DROP TABLE public.chamados_agencias_terceiros;
--- DROP TABLE public.chamados_agencias;
--- DROP TABLE public.chamados;
--- DROP TABLE public.agencias;
--- DROP TABLE public.colaboradores;
--- DROP TABLE public.terceiros;
--- DROP TYPE status_chamado
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+-- Aula 4
 
 INSERT INTO public.colaboradores (nome, email, telefone)
 VALUES ('Carlos', 'carlos@email.com', '(47) 90000-0001');
@@ -451,5 +458,27 @@ VALUES (19, 19, 215.00, 'Técnico 19', '1919190', '1919190');
 
 INSERT INTO public.chamados_agencias_terceiros (id_chamado_agencia, id_terceiro, valor, tenico, nfse, nfe) 
 VALUES (20, 20, 200.00, 'Técnico 20', '2020200', '2020200');
+
+UPDATE agencias SET razao_social = 'Sudoeste' WHERE id = 2;
+UPDATE agencias SET logradouro = 'Rua 15 de novembro' WHERE razao_social = 'Agência Leste';
+UPDATE chamados SET status = 'ANDAMENTO' WHERE id = 1;
+UPDATE chamados SET descricao = 'Problema na comunicação com a central' WHERE id = 1;
+UPDATE chamados_agencias SET id_agencia = 4 WHERE id = 2;
+UPDATE chamados_agencias SET demanda = 'Trocar cabos de rede' WHERE id = 1;
+UPDATE chamados_agencias_terceiros SET id_terceiro = 9 WHERE id = 7;
+UPDATE colaboradores SET telefone = '(47)12345-4321' WHERE nome = 'Julia';
+UPDATE terceiros SET razao_social = 'NewTech' WHERE razao_social = 'Empresa XYZ';
+UPDATE terceiros SET cidade = 'Blumenau' WHERE razao_social = 'Empresa MNO';
+
+DELETE FROM agencias WHERE id = 3;
+DELETE FROM agencias WHERE logradouro = 'Avenida dos Bosques, 2223';
+DELETE FROM chamados WHERE status = 'NOVO';
+DELETE FROM chamados WHERE id = 9;
+DELETE FROM chamados_agencias WHERE id_agencia = 17;
+DELETE FROM chamados_agencias WHERE demanda = 'Atualização do banco de dados da agência';
+DELETE FROM chamados_agencias_terceiros WHERE id_terceiro = 11;
+DELETE FROM colaboradores WHERE nome = 'Felipe';
+DELETE FROM terceiros WHERE razao_social = 'Empresa QWE';
+DELETE FROM terceiros WHERE cidade = 'Aracaju';
 
 
